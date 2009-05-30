@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name     = "fakeweb"
-  s.version  = "1.2.2"
+  s.version  = "1.2.2.1"
   s.date     = "2009-05-04"
   s.summary  = "A tool for faking responses to HTTP requests"
   s.homepage = "http://github.com/chrisk/fakeweb"
