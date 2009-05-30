@@ -5,11 +5,14 @@ require 'stringio'
 module Net  #:nodoc: all
 
   class BufferedIO
+    attr_accessor :full_rbuf
+
     alias initialize_without_fakeweb initialize
     def initialize(io, debug_output = nil)
       @read_timeout = 60
       @rbuf = ''
       @debug_output = debug_output
+      @full_rbuf = ''
 
       @io = case io
       when Socket, OpenSSL::SSL::SSLSocket, IO
@@ -22,6 +25,13 @@ module Net  #:nodoc: all
         end
       end
       raise "Unable to create local socket" unless @io
+    end
+
+    alias rbuf_consume_without_fakeweb rbuf_consume
+    def rbuf_consume(len)
+      s = rbuf_consume_without_fakeweb(len)
+      @full_rbuf << s
+      s
     end
   end
 
@@ -54,7 +64,9 @@ module Net  #:nodoc: all
         FakeWeb.response_for(method, uri, &block)
       elsif FakeWeb.allow_net_connect?
         connect_without_fakeweb
-        request_without_fakeweb(request, body, &block)
+        res = request_without_fakeweb(request, body, &block)
+        after_unhandled_request(request, res)
+        res
       else
         raise FakeWeb::NetConnectNotAllowedError,
               "Real HTTP connections are disabled. Unregistered request: #{request.method} #{uri}"
@@ -64,6 +76,8 @@ module Net  #:nodoc: all
     alias connect_without_fakeweb connect
     def connect
     end
-  end
 
+    def after_unhandled_request(request, response)
+    end
+  end
 end
