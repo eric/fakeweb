@@ -65,7 +65,7 @@ module Net  #:nodoc: all
       elsif FakeWeb.allow_net_connect?
         connect_without_fakeweb
         res = request_without_fakeweb(request, body, &block)
-        after_unhandled_request(request, res)
+        after_unhandled_request(uri, request, res, @socket.full_rbuf)
         res
       else
         raise FakeWeb::NetConnectNotAllowedError,
@@ -77,7 +77,7 @@ module Net  #:nodoc: all
     def connect
     end
 
-    def after_unhandled_request(request, response)
+    def after_unhandled_request(uri, request, response, response_buffer)
     end
   end
 end
