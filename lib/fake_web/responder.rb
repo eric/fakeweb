@@ -61,7 +61,9 @@ module FakeWeb
         }
 
         # read the body of response.
-        r.instance_eval { @header['transfer-encoding'] = nil }
+        unless options[:raw]
+          r.instance_eval { @header['transfer-encoding'] = nil }
+        end
         r.reading_body(socket, true) {}
 
         # Delete the transfer-encoding key from r.@header if there wasn't one,
