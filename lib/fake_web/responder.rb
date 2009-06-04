@@ -60,10 +60,13 @@ module FakeWeb
           @header['transfer-encoding'] if @header.key?('transfer-encoding')
         }
 
-        # read the body of response.
+        # To understand why transfer-encoding is being unset, see:
+        #   http://groups.google.com/group/fakeweb-users/msg/2e08e373ed34963c
         unless options[:raw]
           r.instance_eval { @header['transfer-encoding'] = nil }
         end
+
+        # read the body of response.
         r.reading_body(socket, true) {}
 
         # Delete the transfer-encoding key from r.@header if there wasn't one,

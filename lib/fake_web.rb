@@ -84,6 +84,9 @@ module FakeWeb
   #   See the <tt>Net::HTTPResponse</tt>
   #   documentation[http://ruby-doc.org/stdlib/libdoc/net/http/rdoc/classes/Net/HTTPResponse.html]
   #   for more information on creating custom response objects.
+  #
+  #   An additional parameter of <tt>:raw</tt> can be passed with a value of 
+  #   <tt>true</tt> to prevent FakeWeb from clearing Transfer-Encoding.
   # 
   # +options+ may also be an +Array+ containing a list of the above-described +Hash+.
   # In this case, FakeWeb will rotate through each provided response, you may optionally
